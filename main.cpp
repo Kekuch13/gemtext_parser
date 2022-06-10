@@ -144,7 +144,6 @@ void pass(const fs::path &curr_path, const fs::path &out_directory)
             string curr_folder_name = file.path().string();
             curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
             fs::create_directory(out_directory.string() + curr_folder_name);
-
             pass(file.path(), out_directory.string() + curr_folder_name);
         } else {
             string path = file.path().string();
