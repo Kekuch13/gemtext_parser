@@ -156,7 +156,6 @@ void pass(const fs::path &curr_path, const fs::path &out_directory)
 
 int main()
 {
-    setlocale(LC_ALL, "RUS");
     string input_directory, output_directory;
 
     cout << "Enter the full path to the input_directory:";
