@@ -141,15 +141,18 @@ void pass(const fs::path &curr_path, const fs::path &out_directory)
 {
     for (const auto &file : fs::directory_iterator(curr_path)) {
         if (fs::is_directory(file)) {
-            string directory_name = file.path().string();
-            directory_name = directory_name.substr(directory_name.rfind('\\'));
+            string curr_folder_name = file.path().string();
+            curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
+            fs::create_directory(out_directory.string() + curr_folder_name);
 
-            fs::create_directory(out_directory.string() + directory_name);
-            pass(file.path(), out_directory.string() + directory_name);
+            pass(file.path(), out_directory.string() + curr_folder_name);
         } else {
             string path = file.path().string();
-            if (path.rfind(".gmi") == string::npos) fs::copy(file, out_directory);
-            else ToHtml(file, out_directory);
+            if (path.rfind(".gmi") == string::npos) {
+                fs::copy(file, out_directory);
+            } else {
+                ToHtml(file, out_directory);
+            }
         }
     }
 }
