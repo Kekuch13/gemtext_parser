@@ -52,6 +52,7 @@ void FormatSpaces(string &buff)
     }
 }
 
+// преобразует .gmi файл в .html
 void ToHtml(const fs::path &file, const fs::path &out_directory)
 {
     string filename = file.string();
@@ -135,6 +136,7 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
     original_file.close();
 }
 
+// функция для обхода директории
 void pass(const fs::path &curr_path, const fs::path &out_directory)
 {
     for (const auto &file : fs::directory_iterator(curr_path)) {
