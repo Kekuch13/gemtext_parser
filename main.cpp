@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 //      "=>example.com text" --> "=> example.com text"
 void FormatSpaces(string &buff)
 {
-    if(buff.empty()) return;
+    if (buff.empty()) return;
 
     int pos = 0; // pos - позиция, где должен стоять пробел после символа, определяющего строку
     switch (buff[0]) {
@@ -42,11 +42,11 @@ void FormatSpaces(string &buff)
         }
     }
 
-    for(int i = pos; i < buff.size();) {
-        if(buff[i] == buff[i+1] && buff[i] == ' ') buff.erase(pos, 1);
+    for (int i = pos; i < buff.size();) {
+        if (buff[i] == buff[i + 1] && buff[i] == ' ') buff.erase(pos, 1);
         else break;
     }
-    if(buff[pos] != ' ') {
+    if (buff[pos] != ' ') {
         buff.insert(pos, " ");
         return;
     }
@@ -73,7 +73,7 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
             html_file << "</ul>\n";
             IsFirstUnList = true;
         }
-        if(IsPreformat && buff[0] != '`') {
+        if (IsPreformat && buff[0] != '`') {
             html_file << buff << "\n";
             continue;
         }
@@ -108,13 +108,13 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
                 for (i = 4; i < buff.size(); ++i) {
                     if (buff[i] == ' ') break;
                 }
-                if(i >= buff.size()) i = buff.size() - 1;
+                if (i >= buff.size()) i = buff.size() - 1;
                 html_file << buff.substr(3, i - 3) << "\">";
                 html_file << buff.substr(i + 1) << "</a>\n</p>\n";
                 break;
             }
             case '`': {
-                if(!IsPreformat) {
+                if (!IsPreformat) {
                     html_file << "<pre>\n";
                     IsPreformat = true;
                 } else {
@@ -124,7 +124,7 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
                 break;
             }
             default: {
-                if(buff.empty()) html_file << "<p>&nbsp;</p>\n";
+                if (buff.empty()) html_file << "<p>&nbsp;</p>\n";
                 else html_file << "<p>" << buff << "</p>\n";
                 break;
             }
@@ -139,7 +139,7 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
 // функция для обхода директории
 void pass(const fs::path &curr_path, const fs::path &out_directory)
 {
-    for (const auto &file : fs::directory_iterator(curr_path)) {
+    for (const auto &file: fs::directory_iterator(curr_path)) {
         if (fs::is_directory(file)) {
             string curr_folder_name = file.path().string();
             curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
