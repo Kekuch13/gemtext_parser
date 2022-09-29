@@ -18,7 +18,7 @@ void FormatSpaces(string &buff)
     switch (buff[0]) {
         case '#': {
             int count = 0;
-            for (auto &ch: buff) {
+            for (auto &ch : buff) {
                 if (ch == '#') count++;
                 else break;
             }
