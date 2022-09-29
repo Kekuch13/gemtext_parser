@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 // Примеры:
 //      "*   some text" --> "* some text"
 //      "=>example.com text" --> "=> example.com text"
-void FormatSpaces(string &buff)
+void formatSpaces(string &buff)
 {
     if (buff.empty()) return;
 
@@ -53,7 +53,7 @@ void FormatSpaces(string &buff)
 }
 
 // преобразует .gmi файл в .html
-void ToHtml(const fs::path &file, const fs::path &out_directory)
+void toHtml(const fs::path &file, const fs::path &out_directory)
 {
     string filename = file.string();
     filename = filename.substr(filename.rfind('\\'));
@@ -64,21 +64,21 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
 
     html_file << "<html>\n";
     string buff;
-    bool IsFirstUnList = true;
-    bool IsPreformat = false;
+    bool isFirstUnList = true;
+    bool isPreformat = false;
     while (!original_file.eof()) {
         getline(original_file, buff);
 
-        if (!IsFirstUnList && buff[0] != '*') {
+        if (!isFirstUnList && buff[0] != '*') {
             html_file << "</ul>\n";
-            IsFirstUnList = true;
+            isFirstUnList = true;
         }
-        if (IsPreformat && buff[0] != '`') {
+        if (isPreformat && buff[0] != '`') {
             html_file << buff << "\n";
             continue;
         }
 
-        FormatSpaces(buff);
+        formatSpaces(buff);
         switch (buff[0]) {
             case '#': {
                 int count = 0;
@@ -91,9 +91,9 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
                 break;
             }
             case '*': {
-                if (IsFirstUnList) {
+                if (isFirstUnList) {
                     html_file << "<ul>\n";
-                    IsFirstUnList = false;
+                    isFirstUnList = false;
                 }
                 html_file << "<li>" << buff.substr(2) << "</li>\n";
                 break;
@@ -114,12 +114,12 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
                 break;
             }
             case '`': {
-                if (!IsPreformat) {
+                if (!isPreformat) {
                     html_file << "<pre>\n";
-                    IsPreformat = true;
+                    isPreformat = true;
                 } else {
                     html_file << "</pre>\n";
-                    IsPreformat = false;
+                    isPreformat = false;
                 }
                 break;
             }
@@ -139,7 +139,7 @@ void ToHtml(const fs::path &file, const fs::path &out_directory)
 // функция для обхода директории
 void pass(const fs::path &curr_path, const fs::path &out_directory)
 {
-    for (const auto &file: fs::directory_iterator(curr_path)) {
+    for (const auto &file : fs::directory_iterator(curr_path)) {
         if (fs::is_directory(file)) {
             string curr_folder_name = file.path().string();
             curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
@@ -150,7 +150,7 @@ void pass(const fs::path &curr_path, const fs::path &out_directory)
             if (path.rfind(".gmi") == string::npos) {
                 fs::copy(file, out_directory);
             } else {
-                ToHtml(file, out_directory);
+                toHtml(file, out_directory);
             }
         }
     }
