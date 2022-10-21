@@ -13,7 +13,7 @@
 ## Gemtext
 
 Файл с расширением `.gmi` содержит в себе текст в упрощенной разметке, 
-которая называется [gemtext](https://gemini.circumlunar.space/docs/gemtext.gmi). 
+которая называется [gemtext](https://gemini.circumlunar.space/docs/ru/gemtext.gmi). 
 Поддерживаются следующие возможности разметки:
 ```
 # Заголовок первого уровня
