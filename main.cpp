@@ -139,25 +139,30 @@ void toHtml(const fs::path &file, const fs::path &out_directory)
 // функция для обхода директории
 void pass(const fs::path &curr_path, const fs::path &out_directory)
 {
-    for (const auto &file : fs::directory_iterator(curr_path)) {
-        if (fs::is_directory(file)) {
-            string curr_folder_name = file.path().string();
-            curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
-            fs::create_directory(out_directory.string() + curr_folder_name);
-            pass(file.path(), out_directory.string() + curr_folder_name);
-        } else {
-            string path = file.path().string();
-            if (path.rfind(".gmi") == string::npos) {
-                fs::copy(file, out_directory);
+    try {
+        for (const auto &file: fs::directory_iterator(curr_path)) {
+            if (fs::is_directory(file)) {
+                string curr_folder_name = file.path().string();
+                curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
+                fs::create_directory(out_directory.string() + curr_folder_name);
+                pass(file.path(), out_directory.string() + curr_folder_name);
             } else {
-                toHtml(file, out_directory);
+                string path = file.path().string();
+                if (path.rfind(".gmi") == string::npos) {
+                    fs::copy(file, out_directory);
+                } else {
+                    toHtml(file, out_directory);
+                }
             }
         }
+    } catch (fs::filesystem_error& er) {
+        cout << er.what();
     }
 }
 
 int main()
 {
+    setlocale(LC_ALL, "RUS");
     string input_directory, output_directory;
 
     cout << "Enter the full path to the input_directory:";
