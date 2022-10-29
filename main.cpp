@@ -18,7 +18,7 @@ void formatSpaces(string &buff)
     switch (buff[0]) {
         case '#': {
             int count = 0;
-            for (auto &ch : buff) {
+            for (auto &ch: buff) {
                 if (ch == '#') count++;
                 else break;
             }
@@ -139,24 +139,20 @@ void toHtml(const fs::path &file, const fs::path &out_directory)
 // функция для обхода директории
 void pass(const fs::path &curr_path, const fs::path &out_directory)
 {
-    try {
-        for (const auto &file: fs::directory_iterator(curr_path)) {
-            if (fs::is_directory(file)) {
-                string curr_folder_name = file.path().string();
-                curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
-                fs::create_directory(out_directory.string() + curr_folder_name);
-                pass(file.path(), out_directory.string() + curr_folder_name);
+    for (const auto &file: fs::directory_iterator(curr_path)) {
+        if (fs::is_directory(file)) {
+            string curr_folder_name = file.path().string();
+            curr_folder_name = curr_folder_name.substr(curr_folder_name.rfind('\\'));
+            fs::create_directory(out_directory.string() + curr_folder_name);
+            pass(file.path(), out_directory.string() + curr_folder_name);
+        } else {
+            string path = file.path().string();
+            if (path.rfind(".gmi") == string::npos) {
+                fs::copy(file, out_directory);
             } else {
-                string path = file.path().string();
-                if (path.rfind(".gmi") == string::npos) {
-                    fs::copy(file, out_directory);
-                } else {
-                    toHtml(file, out_directory);
-                }
+                toHtml(file, out_directory);
             }
         }
-    } catch (fs::filesystem_error& er) {
-        cout << er.what();
     }
 }
 
@@ -169,6 +165,15 @@ int main()
     cin >> input_directory;
     cout << "Enter the full path to the output_directory:";
     cin >> output_directory;
+
+    if(!fs::is_directory(input_directory)) {
+        cout << "You have entered an incorrect path for input directory";
+        return 0;
+    }
+    if(!fs::is_directory(output_directory)) {
+        cout << "You have entered an incorrect path for output directory";
+        return 0;
+    }
 
     pass(input_directory, output_directory);
 
